@@ -1,118 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Your Cart | ResinCraft</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .cart-container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
+<meta charset="UTF-8">
+<title>Your Cart | ResinCraft</title>
+<link rel="stylesheet" href="style.css">
 
-        .cart-container h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+<style>
+body {
+    background: #fff0f5;
+}
 
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
-        }
+.cart-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(255,105,180,0.2);
+}
 
-        .cart-item:last-child {
-            border-bottom: none;
-        }
+.cart-container h1 {
+    text-align: center;
+    color: #ff4d88;
+    margin-bottom: 25px;
+}
 
-        .cart-item-name {
-            font-weight: 600;
-        }
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #ffe0eb;
+}
 
-        .cart-item button {
-            background: #ff4d6d;
-            padding: 5px 10px;
-            font-size: 14px;
-        }
+.cart-item-name {
+    font-weight: 600;
+}
 
-        .cart-total {
-            text-align: right;
-            font-size: 18px;
-            margin-top: 20px;
-        }
+.qty-box button {
+    background: #ff69b4;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-        .cart-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 25px;
-        }
+.remove-btn {
+    background: #ff4d6d;
+    margin-left: 10px;
+}
 
-        .cart-actions a button {
-            background: #222;
-        }
-    </style>
+.cart-total {
+    text-align: right;
+    font-size: 20px;
+    margin-top: 20px;
+    color: #ff1493;
+}
+
+.coupon {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.coupon input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ffb6c1;
+}
+
+.coupon button {
+    background: #ff69b4;
+    border: none;
+    padding: 8px 15px;
+    color: white;
+    border-radius: 5px;
+}
+
+.cart-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.cart-actions button {
+    background: #ff69b4;
+    border: none;
+    padding: 10px 18px;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+</style>
 </head>
+
 <body>
 
 <div class="cart-container">
-    <h1>Your Cart</h1>
+<h1>Your Cart</h1>
 
-    <div id="cart-items"></div>
+<div id="cart-items"></div>
 
-    <div class="cart-total">
-        Total: ₹<span id="total">0</span>
-    </div>
+<div class="coupon">
+    <input type="text" id="coupon" placeholder="Enter coupon code">
+    <button onclick="applyCoupon()">Apply</button>
+</div>
 
-    <div class="cart-actions">
-        <a href="index.html">
-            <button>← Continue Shopping</button>
-        </a>
+<div class="cart-total">
+    Total: ₹<span id="total">0</span>
+</div>
 
-        <a href="checkout.html">
-            <button>Checkout →</button>
-        </a>
-    </div>
+<div class="cart-actions">
+    <a href="index.html"><button>← Continue Shopping</button></a>
+    <a href="checkout.html"><button>Checkout →</button></a>
+</div>
 </div>
 
 <script>
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let cartItems = document.getElementById("cart-items");
-let total = 0;
+let discount = 0;
 
-if (cart.length === 0) {
-    cartItems.innerHTML = "<p>Your cart is empty.</p>";
+function renderCart() {
+    let cartItems = document.getElementById("cart-items");
+    cartItems.innerHTML = "";
+    let total = 0;
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = "<p>Your cart is empty 💔</p>";
+        document.getElementById("total").innerText = 0;
+        return;
+    }
+
+    cart.forEach((item, index) => {
+        let itemTotal = item.price * item.qty;
+        total += itemTotal;
+
+        cartItems.innerHTML += `
+            <div class="cart-item">
+                <div class="cart-item-name">
+                    ${item.name}
+                </div>
+
+                <div class="qty-box">
+                    <button onclick="changeQty(${index}, -1)">−</button>
+                    ${item.qty}
+                    <button onclick="changeQty(${index}, 1)">+</button>
+                    ₹${itemTotal}
+                    <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+                </div>
+            </div>
+        `;
+    });
+
+    total = total - (total * discount / 100);
+    document.getElementById("total").innerText = total;
 }
 
-cart.forEach((item, index) => {
-    let itemTotal = item.price * item.qty;
-    total += itemTotal;
-
-    cartItems.innerHTML += `
-        <div class="cart-item">
-            <div class="cart-item-name">
-                ${item.name} × ${item.qty}
-            </div>
-            <div>
-                ₹${itemTotal}
-                <button onclick="removeItem(${index})">Remove</button>
-            </div>
-        </div>
-    `;
-});
-
-document.getElementById("total").innerText = total;
+function changeQty(index, change) {
+    cart[index].qty += change;
+    if (cart[index].qty <= 0) cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+}
 
 function removeItem(index) {
     cart.splice(index, 1);
     localStorage.setItem("cart", JSON.stringify(cart));
-    location.reload();
+    renderCart();
 }
+
+function applyCoupon() {
+    let code = document.getElementById("coupon").value.toUpperCase();
+    if (code === "SAVE10") discount = 10;
+    else if (code === "RESIN20") discount = 20;
+    else {
+        alert("Invalid coupon");
+        return;
+    }
+    alert("Coupon applied!");
+    renderCart();
+}
+
+renderCart();
 </script>
 
 </body>
