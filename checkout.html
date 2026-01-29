@@ -1,21 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Checkout</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Checkout | ResinCraft</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+body {
+    background: #fff0f5;
+    font-family: Arial, sans-serif;
+}
+
+.checkout-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(255,105,180,0.2);
+}
+
+.checkout-container h1 {
+    text-align: center;
+    color: #ff4d88;
+    margin-bottom: 25px;
+}
+
+.section-title {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #ff1493;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: 1px solid #ffb6c1;
+}
+
+.order-summary {
+    background: #fff7fb;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.total {
+    text-align: right;
+    font-size: 20px;
+    margin-top: 15px;
+    color: #ff1493;
+}
+
+.place-order {
+    width: 100%;
+    margin-top: 25px;
+    padding: 12px;
+    background: #ff69b4;
+    border: none;
+    color: white;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+</style>
 </head>
+
 <body>
 
+<div class="checkout-container">
 <h1>Checkout</h1>
 
-<p>Thank you for shopping with ResinCraft 💖</p>
+<h3 class="section-title">Shipping Details</h3>
+<input type="text" id="name" placeholder="Full Name" required>
+<input type="text" id="phone" placeholder="Mobile Number" required>
+<textarea id="address" placeholder="Full Address" required></textarea>
 
-<button onclick="placeOrder()">Place Order</button>
+<h3 class="section-title">Order Summary</h3>
+<div class="order-summary" id="order-summary"></div>
+
+<div class="total">
+    Total Payable: ₹<span id="total">0</span>
+</div>
+
+<button class="place-order" onclick="placeOrder()">
+    Place Order
+</button>
+</div>
 
 <script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let summary = document.getElementById("order-summary");
+let total = 0;
+
+// Render order summary
+cart.forEach(item => {
+    let itemTotal = item.price * item.qty;
+    total += itemTotal;
+
+    summary.innerHTML += `
+        <div class="order-item">
+            <span>${item.name} × ${item.qty}</span>
+            <span>₹${itemTotal}</span>
+        </div>
+    `;
+});
+
+document.getElementById("total").innerText = total;
+
 function placeOrder() {
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let address = document.getElementById("address").value;
+
+    if (!name || !phone || !address) {
+        alert("Please fill all details");
+        return;
+    }
+
+    alert("🎉 Order placed successfully!\nWe will contact you soon.");
     localStorage.removeItem("cart");
-    alert("Order placed successfully!");
     window.location.href = "index.html";
 }
 </script>
