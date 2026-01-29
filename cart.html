@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart | ResinCraft</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .cart-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .cart-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+        }
+
+        .cart-item button {
+            background: #ff4d6d;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .cart-total {
+            text-align: right;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .cart-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .cart-actions a button {
+            background: #222;
+        }
+    </style>
+</head>
+<body>
+
+<div class="cart-container">
+    <h1>Your Cart</h1>
+
+    <div id="cart-items"></div>
+
+    <div class="cart-total">
+        Total: ₹<span id="total">0</span>
+    </div>
+
+    <div class="cart-actions">
+        <a href="index.html">
+            <button>← Continue Shopping</button>
+        </a>
+
+        <a href="checkout.html">
+            <button>Checkout →</button>
+        </a>
+    </div>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let cartItems = document.getElementById("cart-items");
+let total = 0;
+
+if (cart.length === 0) {
+    cartItems.innerHTML = "<p>Your cart is empty.</p>";
+}
+
+cart.forEach((item, index) => {
+    let itemTotal = item.price * item.qty;
+    total += itemTotal;
+
+    cartItems.innerHTML += `
+        <div class="cart-item">
+            <div class="cart-item-name">
+                ${item.name} × ${item.qty}
+            </div>
+            <div>
+                ₹${itemTotal}
+                <button onclick="removeItem(${index})">Remove</button>
+            </div>
+        </div>
+    `;
+});
+
+document.getElementById("total").innerText = total;
+
+function removeItem(index) {
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    location.reload();
+}
+</script>
+
+</body>
+</html>

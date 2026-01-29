@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resin Keychains Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>ResinCraft</h1>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#shop">Shop</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+</header>
+
+<section id="home" class="hero">
+    <h2>Custom Resin Keychains</h2>
+    <p>Handmade • Personalized • Premium Finish</p>
+    <button onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+        Shop Now
+    </button>
+</section>
+
+<section id="shop" class="products">
+    <h2>Our Blog & Products</h2>
+
+    <div class="product-card">
+        <img src="google/1.jpg.webp">
+        <h3>Name Initial Resin Keychain</h3>
+        <p>Beautiful handcrafted resin keychain with your name initial.</p>
+        <span>₹299</span>
+        <button onclick="addToCart('Name Initial Resin Keychain',299)">
+            Add to Cart
+        </button>
+    </div>
+
+    <div class="product-card">
+        <img src="google/2.jpeg">
+        <h3>Photo Resin Keychain</h3>
+        <p>Turn your memories into a stylish resin keychain.</p>
+        <span>₹399</span>
+        <button onclick="addToCart('Photo Resin Keychain',399)">
+            Add to Cart
+        </button>
+    </div>
+
+    <div class="product-card">
+        <img src="google/3.jpeg">
+        <h3>Alphabet Resin Keychain</h3>
+        <p>Minimal alphabet design with glossy resin finish.</p>
+        <span>₹249</span>
+        <button onclick="addToCart('Alphabet Resin Keychain',249)">
+            Add to Cart
+        </button>
+    </div>
+</section>
+
+<section id="about" class="about">
+    <h2>About Us</h2>
+    <p>
+        ResinCraft creates handmade custom resin keychains with love and care.
+        Each piece is unique and crafted to make your memories last forever.
+    </p>
+</section>
+
+<section id="contact" class="contact">
+    <h2>Contact Us</h2>
+    <p>Email: resincraft@gmail.com</p>
+    <p>Instagram: @resincraft_store</p>
+</section>
+
+<footer>
+    <p>© 2026 ResinCraft. All Rights Reserved.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

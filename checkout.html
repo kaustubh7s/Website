@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Checkout</h1>
+
+<p>Thank you for shopping with ResinCraft 💖</p>
+
+<button onclick="placeOrder()">Place Order</button>
+
+<script>
+function placeOrder() {
+    localStorage.removeItem("cart");
+    alert("Order placed successfully!");
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
