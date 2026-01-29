@@ -97,23 +97,8 @@ input, textarea {
 
 <script>
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let summary = document.getElementById("order-summary");
 let total = 0;
-
-// Render order summary
-cart.forEach(item => {
-    let itemTotal = item.price * item.qty;
-    total += itemTotal;
-
-    summary.innerHTML += `
-        <div class="order-item">
-            <span>${item.name} × ${item.qty}</span>
-            <span>₹${itemTotal}</span>
-        </div>
-    `;
-});
-
-document.getElementById("total").innerText = total;
+cart.forEach(i => total += i.price * i.qty);
 
 function placeOrder() {
     let name = document.getElementById("name").value;
@@ -121,13 +106,28 @@ function placeOrder() {
     let address = document.getElementById("address").value;
 
     if (!name || !phone || !address) {
-        alert("Please fill all details");
+        alert("Fill all details");
         return;
     }
 
-    alert("🎉 Order placed successfully!\nWe will contact you soon.");
-    localStorage.removeItem("cart");
-    window.location.href = "index.html";
+    fetch("save_order.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body:
+            "name=" + name +
+            "&phone=" + phone +
+            "&address=" + address +
+            "&items=" + JSON.stringify(cart) +
+            "&total=" + total
+    })
+    .then(res => res.text())
+    .then(data => {
+        if (data === "success") {
+            localStorage.removeItem("cart");
+            alert("Order placed successfully 🎉");
+            window.location.href = "index.html";
+        }
+    });
 }
 </script>
 
